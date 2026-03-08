@@ -1,7 +1,10 @@
 use macroquad::prelude::*;
+use constants::colors::*;
 
-use crate::grid::Grid;
+use crate::{grid::Grid, snake::Snake};
+mod constants;
 mod grid;
+mod snake;
 
 const WINDOW_WIDTH: i32 = 1280;
 const WINDOW_HEIGHT: i32 = 720;
@@ -10,7 +13,7 @@ fn window_config() -> Conf {
     Conf {
         window_title: "Snake".to_owned(),
         fullscreen: false,
-        window_resizable: true,
+        window_resizable: false,
         window_width: WINDOW_WIDTH,
         window_height: WINDOW_HEIGHT,
         ..Default::default()
@@ -19,20 +22,39 @@ fn window_config() -> Conf {
 
 #[macroquad::main(window_config)]
 async fn main() {
-    const BG: Color = color_u8!(2, 6, 24, 255);
-    const BGM: Color = color_u8!(16, 24, 40, 255);
-    let grid = Grid::new(0.0, 48.0, 32, 10);
+    let game_speed = 20;
+    let mut cnt = 0;
+    let grid = Grid::new(0.0, 48.0, 32, 16);
+    let mut snake = Snake::new();
     loop {
-        clear_background(BG);
+        if is_key_down(KeyCode::Down) {
+            snake.change_direction(snake::SnakeDirection::Down);
+        }
 
-        draw_rectangle(0.0, 0.0, screen_width(), 48.0, BGM);
-        grid.draw();
+        if is_key_down(KeyCode::Up) {
+            snake.change_direction(snake::SnakeDirection::Up);
+        }
 
+        if is_key_down(KeyCode::Right) {
+            snake.change_direction(snake::SnakeDirection::Right);
+        }
 
-        // draw_line(40.0, 40.0, 100.0, 200.0, 15.0, BLUE);
-        // draw_rectangle(screen_width() / 2.0 - 60.0, 100.0, 120.0, 60.0, GREEN);
-        // draw_circle(screen_width() - 30.0, screen_height() - 30.0, 15.0, YELLOW);
-        // draw_text("HELLO", 20.0, 20.0, 20.0, DARKGRAY);
+        if is_key_down(KeyCode::Left) {
+            snake.change_direction(snake::SnakeDirection::Left);
+        }
+
+        if cnt == game_speed {
+            cnt = 0;
+            snake.update();
+        } else {
+            cnt+=1;
+        }
+        clear_background(GRAY_950);
+
+        draw_rectangle(0.0, 0.0, screen_width(), 48.0, GRAY_950);
+        draw_text("Snake Game", 8.0, 40.0, 28.0, GREEN_600);
+        draw_line(0.0, 48.0, screen_width(), 48.0, 1.0, GRAY_700);
+        grid.draw(&snake);
 
         next_frame().await
     }

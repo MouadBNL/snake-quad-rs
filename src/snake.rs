@@ -1,3 +1,5 @@
+use crate::fruit::Fruit;
+
 pub enum SnakeDirection {
     Left,
     Right,
@@ -7,6 +9,7 @@ pub enum SnakeDirection {
 
 pub struct Snake {
     pub direction: SnakeDirection,
+    pub has_eaten: bool,
     pub cells: Vec<(usize, usize)>,
 }
 
@@ -14,12 +17,17 @@ impl Snake {
     pub fn new() -> Self {
         Snake {
             direction: SnakeDirection::Right,
+            has_eaten: false,
             cells: vec![(1, 1), (2, 1), (3, 1)],
         }
     }
 
     pub fn update(&mut self) {
-        self.cells.remove(0);
+        if self.has_eaten {
+            self.has_eaten = false;
+        } else {
+            self.cells.remove(0);
+        }
         let corr = self.cells.last().unwrap();
 
         let x = match self.direction {
@@ -47,5 +55,9 @@ impl Snake {
             }
             _ => self.direction = dir,
         };
+    }
+
+    pub fn get_head(&self) -> Option<(usize, usize)> {
+        self.cells.last().cloned()
     }
 }

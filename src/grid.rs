@@ -1,5 +1,5 @@
 use macroquad::prelude::*;
-use crate::{constants::colors::*, snake::Snake};
+use crate::{constants::colors::*, fruit::Fruit, snake::Snake};
 
 const CELL_SIZE: f32 = 32.0;
 const CELL_PADDING: f32 = 1.0;
@@ -16,13 +16,14 @@ pub struct Grid {
 enum GridCellType {
     Emty,
     Snake,
+    Fruit,
 }
 
 impl Grid {
     pub fn new(x: f32, y: f32, w: usize, h: usize) -> Self {
         Grid { x, y, w, h }
     }
-    pub fn draw(&self, snake: &Snake) {
+    pub fn draw(&self, snake: &Snake, fruit: &Fruit) {
         draw_rectangle(
             self.x,
             self.y,
@@ -35,7 +36,9 @@ impl Grid {
             for j in 0..self.h {
                 let cell_type = if snake.cells.contains(&(i, j)) {
                     GridCellType::Snake
-                } else {
+                } else if fruit.cell() == (i, j) {
+                    GridCellType::Fruit
+                }else {
                     GridCellType::Emty
                 };
 
@@ -47,6 +50,7 @@ impl Grid {
                     match cell_type {
                         GridCellType::Emty => GRAY_900,
                         GridCellType::Snake => GREEN_600,
+                        GridCellType::Fruit => AMBER_700,
                     },
                 );
             }

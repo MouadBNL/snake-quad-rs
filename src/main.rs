@@ -59,6 +59,12 @@ async fn main() {
                 snake.has_eaten = true;
                 fruit.respawn();
             }
+
+
+            if snake.is_colliding_with_self() {
+                snake.reset();
+                fruit.respawn();
+            }
         } else {
             cnt+=1;
         }

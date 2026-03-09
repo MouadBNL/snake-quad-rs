@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 
+#[derive(Debug, PartialEq)]
 pub enum SnakeDirection {
     Left,
     Right,
@@ -7,6 +8,7 @@ pub enum SnakeDirection {
     Up,
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Snake {
     pub direction: SnakeDirection,
     pub has_eaten: bool,
@@ -61,16 +63,8 @@ impl Snake {
         self.cells.last().cloned()
     }
 
-
     pub fn is_colliding_with_self(&self) -> bool {
         let mut uniq = HashSet::new();
         !self.cells.iter().all(|x| uniq.insert(x))
-    }
-
-
-    pub fn reset(&mut self) {
-        self.direction = SnakeDirection::Right;
-        self.has_eaten = false;
-        self.cells = vec![(1, 1), (2, 1), (3, 1)];
     }
 }

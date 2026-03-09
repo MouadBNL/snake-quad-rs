@@ -38,6 +38,14 @@ impl Snake {
     }
 
     pub fn change_direction(&mut self, dir: SnakeDirection) {
-        self.direction = dir;
+        match (&self.direction, &dir) {
+            (SnakeDirection::Left, SnakeDirection::Right)
+            | (SnakeDirection::Right, SnakeDirection::Left)
+            | (SnakeDirection::Down, SnakeDirection::Up)
+            | (SnakeDirection::Up, SnakeDirection::Down) => {
+                eprintln!("Movement forbiden");
+            }
+            _ => self.direction = dir,
+        };
     }
 }

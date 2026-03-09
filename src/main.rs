@@ -27,19 +27,19 @@ async fn main() {
     let grid = Grid::new(0.0, 48.0, 32, 16);
     let mut snake = Snake::new();
     loop {
-        if is_key_down(KeyCode::Down) {
+        if is_key_pressed(KeyCode::Down) {
             snake.change_direction(snake::SnakeDirection::Down);
         }
 
-        if is_key_down(KeyCode::Up) {
+        if is_key_pressed(KeyCode::Up) {
             snake.change_direction(snake::SnakeDirection::Up);
         }
 
-        if is_key_down(KeyCode::Right) {
+        if is_key_pressed(KeyCode::Right) {
             snake.change_direction(snake::SnakeDirection::Right);
         }
 
-        if is_key_down(KeyCode::Left) {
+        if is_key_pressed(KeyCode::Left) {
             snake.change_direction(snake::SnakeDirection::Left);
         }
 

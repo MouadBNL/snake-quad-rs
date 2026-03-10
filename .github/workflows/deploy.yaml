@@ -19,9 +19,9 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 
-            - ./target/wasm32-unknown-unknown/release/snake-quad-rs.wasm
-            - ./index.html
+          path: |
+            ./target/wasm32-unknown-unknown/release/snake-quad-rs.wasm
+            ./index.html
   deploy:
     name: Deploy
     needs: build-wasm

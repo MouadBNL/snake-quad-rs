@@ -18,12 +18,15 @@ jobs:
         run: rustup target add wasm32-unknown-unknown
       - name: Build WASM
         run: cargo build --target wasm32-unknown-unknown --release
+      - name: Setup artifacts
+        run: |
+          mkdir -p ./dist
+          cp ./target/wasm32-unknown-unknown/release/snake-quad-rs.wasm ./dist/
+          cp ./index.html ./dist/
       - name: Upload artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: |
-            ./target/wasm32-unknown-unknown/release/snake-quad-rs.wasm
-            ./index.html
+          path: ./dist
   deploy:
     name: Deploy
     needs: build-wasm

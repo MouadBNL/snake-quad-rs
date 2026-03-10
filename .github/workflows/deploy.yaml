@@ -1,0 +1,38 @@
+name: Deploy to github pages
+
+
+on:
+  push:
+    branches:
+      - feat-deploy-to-github-pages
+      - main
+
+jobs:
+  build-wasm:
+    name: Build WASM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build WASM
+        run: cargo build --target wasm32-unknown-unknown --release
+      - name: Upload artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 
+            - ./target/wasm32-unknown-unknown/release/snake-quad-rs.wasm
+            - ./index.html
+  deploy:
+    name: Deploy
+    needs: build-wasm
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

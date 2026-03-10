@@ -6,7 +6,6 @@ use crate::{
 };
 use macroquad::prelude::*;
 
-
 const CELL_SIZE: f32 = 32.0;
 const CELL_PADDING: f32 = 1.0;
 const HEADER_HEIGHT: f32 = 48.0;
@@ -50,7 +49,14 @@ impl GameScene {
             28.0,
             GREEN_600,
         );
-        draw_line(0.0, HEADER_HEIGHT, screen_width(), HEADER_HEIGHT, 1.0, GRAY_700);
+        draw_line(
+            0.0,
+            HEADER_HEIGHT,
+            screen_width(),
+            HEADER_HEIGHT,
+            1.0,
+            GRAY_700,
+        );
     }
 
     fn draw_grid(&self) {
@@ -102,30 +108,22 @@ impl Scene for GameScene {
 
         if is_key_pressed(KeyCode::Down) {
             self.snake.change_direction(snake::SnakeDirection::Down);
-        }
-
-        if is_key_pressed(KeyCode::Up) {
+        } else if is_key_pressed(KeyCode::Up) {
             self.snake.change_direction(snake::SnakeDirection::Up);
-        }
-
-        if is_key_pressed(KeyCode::Right) {
+        } else if is_key_pressed(KeyCode::Right) {
             self.snake.change_direction(snake::SnakeDirection::Right);
-        }
-
-        if is_key_pressed(KeyCode::Left) {
+        } else if is_key_pressed(KeyCode::Left) {
             self.snake.change_direction(snake::SnakeDirection::Left);
         }
 
-        
         if self.game_cnt == self.game_speed {
-            self.game_cnt= 0;
+            self.game_cnt = 0;
             self.snake.update();
             if self.snake.head() == self.fruit.cell() {
                 self.score += 1;
                 self.snake.eat();
                 self.fruit.respawn();
             }
-
 
             if self.snake.is_colliding_with_self() {
                 return SceneTransition::GoToGameOver { score: self.score };

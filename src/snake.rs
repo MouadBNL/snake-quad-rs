@@ -1,7 +1,10 @@
-use std::{collections::{HashSet, VecDeque}, usize};
+use std::{
+    collections::{HashSet, VecDeque},
+    usize,
+};
 
-use crate::scene::game::GRID_WIDTH;
 use crate::scene::game::GRID_HEIGHT;
+use crate::scene::game::GRID_WIDTH;
 
 #[derive(Debug, PartialEq)]
 pub enum SnakeDirection {
@@ -45,16 +48,12 @@ impl Snake {
         }
         let head = self.head();
 
-
         let (dx, dy) = match self.direction {
             SnakeDirection::Left => (-1, 0),
             SnakeDirection::Right => (1, 0),
             SnakeDirection::Up => (0, -1),
-            SnakeDirection::Down => (0, 1)
+            SnakeDirection::Down => (0, 1),
         };
-
-
-
 
         let x = (head.0 as isize + dx).rem_euclid(GRID_WIDTH as isize) as usize;
         let y = (head.1 as isize + dy).rem_euclid(GRID_HEIGHT as isize) as usize;

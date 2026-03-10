@@ -1,7 +1,4 @@
-use std::{
-    collections::{HashSet, VecDeque},
-    usize,
-};
+use std::collections::{HashSet, VecDeque};
 
 use crate::scene::game::GRID_HEIGHT;
 use crate::scene::game::GRID_WIDTH;

@@ -1,7 +1,6 @@
-
-#![allow(unused_variables)]
-#![allow(dead_code)]
 pub mod colors {
+    #![allow(unused_variables)]
+    #![allow(dead_code)]
     use macroquad::color::Color;
     use macroquad::color_u8;
 

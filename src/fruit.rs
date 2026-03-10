@@ -1,6 +1,6 @@
 use macroquad::rand::rand;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Default)]
 pub struct Fruit {
     x: usize,
     y: usize,

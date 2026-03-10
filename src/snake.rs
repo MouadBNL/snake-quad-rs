@@ -1,4 +1,7 @@
-use std::collections::HashSet;
+use std::{collections::{HashSet, VecDeque}, usize};
+
+use crate::scene::game::GRID_WIDTH;
+use crate::scene::game::GRID_HEIGHT;
 
 #[derive(Debug, PartialEq)]
 pub enum SnakeDirection {
@@ -10,9 +13,15 @@ pub enum SnakeDirection {
 
 #[derive(Debug, PartialEq)]
 pub struct Snake {
-    pub direction: SnakeDirection,
-    pub has_eaten: bool,
-    pub cells: Vec<(usize, usize)>,
+    direction: SnakeDirection,
+    has_eaten: bool,
+    cells: VecDeque<(usize, usize)>,
+}
+
+impl Default for Snake {
+    fn default() -> Self {
+        Snake::new()
+    }
 }
 
 impl Snake {
@@ -20,31 +29,40 @@ impl Snake {
         Snake {
             direction: SnakeDirection::Right,
             has_eaten: false,
-            cells: vec![(1, 1), (2, 1), (3, 1)],
+            cells: VecDeque::from([(1, 1), (2, 1), (3, 1)]),
         }
+    }
+
+    pub fn eat(&mut self) {
+        self.has_eaten = true;
     }
 
     pub fn update(&mut self) {
         if self.has_eaten {
             self.has_eaten = false;
         } else {
-            self.cells.remove(0);
+            self.cells.pop_front();
         }
-        let corr = self.cells.last().unwrap();
+        let head = self.head();
 
-        let x = match self.direction {
-            SnakeDirection::Left => (corr.0 + 32 - 1) % 32,
-            SnakeDirection::Right => (corr.0 + 1) % 32,
-            SnakeDirection::Up => corr.0,
-            SnakeDirection::Down => corr.0,
+
+        let (dx, dy) = match self.direction {
+            SnakeDirection::Left => (-1, 0),
+            SnakeDirection::Right => (1, 0),
+            SnakeDirection::Up => (0, -1),
+            SnakeDirection::Down => (0, 1)
         };
-        let y = match self.direction {
-            SnakeDirection::Down => (corr.1 + 1) % 16,
-            SnakeDirection::Up => (corr.1 + 16 - 1) % 16,
-            SnakeDirection::Right => corr.1,
-            SnakeDirection::Left => corr.1,
-        };
-        self.cells.push((x, y));
+
+
+
+
+        let x = (head.0 as isize + dx).rem_euclid(GRID_WIDTH as isize) as usize;
+        let y = (head.1 as isize + dy).rem_euclid(GRID_HEIGHT as isize) as usize;
+
+        self.cells.push_back((x, y));
+
+        println!("dx {dx}, dy {dy}");
+        println!("snake: {:?}", self.cells);
     }
 
     pub fn change_direction(&mut self, dir: SnakeDirection) {
@@ -52,15 +70,17 @@ impl Snake {
             (SnakeDirection::Left, SnakeDirection::Right)
             | (SnakeDirection::Right, SnakeDirection::Left)
             | (SnakeDirection::Down, SnakeDirection::Up)
-            | (SnakeDirection::Up, SnakeDirection::Down) => {
-                eprintln!("Movement forbiden");
-            }
+            | (SnakeDirection::Up, SnakeDirection::Down) => {}
             _ => self.direction = dir,
         };
     }
 
-    pub fn get_head(&self) -> Option<(usize, usize)> {
-        self.cells.last().cloned()
+    pub fn head(&self) -> (usize, usize) {
+        *self.cells.iter().last().unwrap()
+    }
+
+    pub fn occupies(&self, cell: (usize, usize)) -> bool {
+        self.cells.contains(&cell)
     }
 
     pub fn is_colliding_with_self(&self) -> bool {

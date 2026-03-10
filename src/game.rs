@@ -36,10 +36,10 @@ impl Game {
 
     pub async fn gameloop(&mut self) {
         loop {
-            let transtion = self.state.scene().update();
+            let transition = self.state.scene().update();
             self.state.scene().draw();
 
-            match transtion {
+            match transition {
                 SceneTransition::None => {}
                 SceneTransition::GoToMenu => self.state = GameState::Menu(MenuScene::new()),
                 SceneTransition::GoToGame => self.state = GameState::Game(GameScene::new()),

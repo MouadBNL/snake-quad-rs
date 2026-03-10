@@ -10,8 +10,8 @@ use macroquad::prelude::*;
 const CELL_SIZE: f32 = 32.0;
 const CELL_PADDING: f32 = 1.0;
 const HEADER_HEIGHT: f32 = 48.0;
-const GRID_WIDTH: usize = 32;
-const GRID_HEIGHT: usize = 16;
+pub const GRID_WIDTH: usize = 32;
+pub const GRID_HEIGHT: usize = 16;
 
 #[derive(Debug, PartialEq)]
 pub struct GameScene {
@@ -24,7 +24,7 @@ pub struct GameScene {
 }
 
 enum GridCellType {
-    Emty,
+    Empty,
     Snake,
     Fruit,
 }
@@ -64,12 +64,12 @@ impl GameScene {
 
         for i in 0..GRID_WIDTH {
             for j in 0..GRID_HEIGHT {
-                let cell_type = if self.snake.cells.contains(&(i, j)) {
+                let cell_type = if self.snake.occupies((i, j)) {
                     GridCellType::Snake
                 } else if self.fruit.cell() == (i, j) {
                     GridCellType::Fruit
                 } else {
-                    GridCellType::Emty
+                    GridCellType::Empty
                 };
 
                 draw_rectangle(
@@ -78,7 +78,7 @@ impl GameScene {
                     CELL_SIZE - CELL_PADDING * 2.0,
                     CELL_SIZE - CELL_PADDING * 2.0,
                     match cell_type {
-                        GridCellType::Emty => GRAY_900,
+                        GridCellType::Empty => GRAY_900,
                         GridCellType::Snake => GREEN_600,
                         GridCellType::Fruit => AMBER_700,
                     },
@@ -120,9 +120,9 @@ impl Scene for GameScene {
         if self.game_cnt == self.game_speed {
             self.game_cnt= 0;
             self.snake.update();
-            if let Some(cell) = self.snake.get_head() && cell == self.fruit.cell() {
+            if self.snake.head() == self.fruit.cell() {
                 self.score += 1;
-                self.snake.has_eaten = true;
+                self.snake.eat();
                 self.fruit.respawn();
             }
 

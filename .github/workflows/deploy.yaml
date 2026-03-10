@@ -24,7 +24,7 @@ jobs:
           cp ./target/wasm32-unknown-unknown/release/snake-quad-rs.wasm ./dist/
           cp ./index.html ./dist/
       - name: Upload artifacts
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./dist
   deploy:
